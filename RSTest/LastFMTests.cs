@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using NUnit.Framework;
@@ -37,10 +38,34 @@ namespace RSTest
         }
 
         [Test]
+        public void CanLoadLastFMMultipleMock()
+        {
+            var mock = new Mock<ILastFM>();
+
+            var mock2 = new Mock<IRevTrack>();
+            var mock3 = new Mock<IRevTrack>();
+
+            mock.Setup(m => m.GetRecentTracks("alord1647fm")).Returns(new List<IRevTrack> {mock2.Object, mock3.Object});
+            var lib = mock.Object;
+            Assert.That(lib.GetRecentTracks("alord1647fm").Count() == 2);
+        }
+
+        [Test]
         public void CanLoadLastFMMultiple()
         {
-            var lib = new Mock<ILastFM>().Object;
-            Assert.IsNotNull(lib.GetRecentTracks("alord1647fm"));
+            var lib = new LastFMLibrary();
+            var tracks = lib.GetRecentTracks("alord1647fm");
+
+            Assert.IsNotNull(tracks);
+            Assert.That(tracks.Count() == 2);
+
+            foreach (var item in tracks)
+            {
+                Assert.That(item.PlayDate.HasValue);
+                Assert.That(item.PlayDate.Value < DateTime.UtcNow);
+                Assert.That(item.PlayDate.Value > DateTime.UtcNow.AddDays(-1));
+            }
+
         }
     }
 }

@@ -95,11 +95,11 @@ namespace RevScrob
                 }
 
                 return new ApiResult
-                {
-                    StatusCode = response.StatusCode,
-                    Data = dataItem,
-                    Error = error
-                };
+                    {
+                        StatusCode = response.StatusCode,
+                        Data = dataItem,
+                        Error = error
+                    };
 
                 throw new Exception("Unable to deserialize");
                 //return new ApiResult<string>
