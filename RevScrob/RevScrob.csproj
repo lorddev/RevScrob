@@ -48,6 +48,7 @@
     <Compile Include="LastFMLibrary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RestCaller.cs" />
+    <Compile Include="TrackRecord.cs" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="iTunesLib">

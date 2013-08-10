@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using NUnit.Framework;
 using RevScrob;
-using iTunesLib;
 using Moq;
 
 namespace RSTest

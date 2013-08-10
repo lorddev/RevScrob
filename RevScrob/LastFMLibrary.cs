@@ -20,6 +20,8 @@ namespace RevScrob
     {
         int? PlayCount { get; set; }
         DateTime? PlayDate { get; set; }
+        string Song { get; set; }
+        string Album { get; set; }
     }
 
     public class LastFMLibrary : ILastFM
@@ -50,6 +52,8 @@ namespace RevScrob
             public int? PlayCount { get; set; }
 
             public DateTime? PlayDate { get; set; }
+            public string Song { get; set; }
+            public string Album { get; set; }
         }
 
         public IEnumerable<IRevTrack> GetRecentTracks(string username)
