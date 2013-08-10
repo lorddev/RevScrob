@@ -4,16 +4,22 @@ using System.Linq;
 
 namespace RevScrob
 {
-    internal interface ITrackRecord
+    public interface ITrackRecord
     {
         bool Contains(string song, string album);
         bool IsCurrent(string song, string album, DateTime modifiedDateUtc);
+        void Set(IRevTrack track, DateTime modifiedDate);
     }
 
     /// <summary>
     /// In-memory cache to keep track of items already processed
+    /// Use case is as follows:
+    /// <ul>
+    /// <li>When iterating backwards through a paginated "recent tracks" call, need to know that we've already
+    /// processed that track. In such a case, modifiedDateUtc should be the played date.</li>
+    /// </ul>
     /// </summary>
-    class TrackRecord : ITrackRecord
+    public class TrackRecord : ITrackRecord
     {
         private class TrackTuple : Tuple<IRevTrack, DateTime>
         {
@@ -46,7 +52,7 @@ namespace RevScrob
             _records = new List<TrackTuple>();
         }
 
-        internal static TrackRecord Instance { get; private set; }
+        public static TrackRecord Instance { get; private set; }
 
         public bool Contains(string song, string album)
         {
@@ -64,7 +70,7 @@ namespace RevScrob
             {
                 if (!Contains(track.Song, track.Album))
                 {
-                    _records.Add(new TrackTuple(track, DateTime.UtcNow));
+                    _records.Add(new TrackTuple(track, modifiedDate));
                 }
                 else if (!IsCurrent(track.Song, track.Album, modifiedDate))
                 {
