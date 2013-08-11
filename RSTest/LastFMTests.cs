@@ -43,9 +43,9 @@ namespace RSTest
             var mock2 = new Mock<IRevTrack>();
             var mock3 = new Mock<IRevTrack>();
 
-            mock.Setup(m => m.GetRecentTracks("alord1647fm")).Returns(new List<IRevTrack> {mock2.Object, mock3.Object});
+            mock.Setup(m => m.GetRecentTracks("alord1647fm", 0)).Returns(new List<IRevTrack> {mock2.Object, mock3.Object});
             var lib = mock.Object;
-            Assert.That(lib.GetRecentTracks("alord1647fm").Count() == 2);
+            Assert.That(lib.GetRecentTracks("alord1647fm", 0).Count() == 2);
         }
 
         [Test]
@@ -55,7 +55,7 @@ namespace RSTest
             var tracks = lib.GetRecentTracks("alord1647fm");
 
             Assert.IsNotNull(tracks);
-            Assert.That(tracks.Count() == 2);
+            Assert.AreEqual(10, tracks.Count());
 
             foreach (var item in tracks)
             {

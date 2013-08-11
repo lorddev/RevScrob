@@ -60,7 +60,7 @@ namespace RevScrob
             if (!disposing) return;
             try
             {
-                _itunes.Quit();
+               // _itunes.Quit();
             }
             catch
             {

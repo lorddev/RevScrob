@@ -53,6 +53,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="BatchProcessorTests.cs" />
     <Compile Include="TrackRecordTests.cs" />
     <Compile Include="LastFMTests.cs" />
     <Compile Include="iTunesTests.cs" />
