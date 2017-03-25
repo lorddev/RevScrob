@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using RevScrob;
 using Moq;
+using RevScrob.Properties;
 
 namespace RSTest
 {
@@ -36,28 +38,31 @@ namespace RSTest
         }
 
         [Test]
-        public void CanLoadLastFMMultipleMock()
+        public async Task CanLoadLastFMMultipleMock()
         {
             var mock = new Mock<ILastFM>();
 
             var mock2 = new Mock<IRevTrack>();
             var mock3 = new Mock<IRevTrack>();
 
-            mock.Setup(m => m.GetRecentTracks("alord1647fm", 0)).Returns(new List<IRevTrack> {mock2.Object, mock3.Object});
+            mock.Setup(m => m.GetRecentTracks(Settings.Default.LastFMUser, 0, 10))
+                .Returns(Task.FromResult(new List<IRevTrack> {mock2.Object, mock3.Object}.AsEnumerable()));
             var lib = mock.Object;
-            Assert.That(lib.GetRecentTracks("alord1647fm", 0).Count() == 2);
+            var result = await lib.GetRecentTracks(Settings.Default.LastFMUser, 0, 10);
+            Assert.That(result.Count() == 2);
         }
 
         [Test]
-        public void CanLoadLastFMMultiple()
+        public async Task CanLoadLastFMMultiple()
         {
             var lib = new LastFMLibrary();
-            var tracks = lib.GetRecentTracks("alord1647fm");
+            var tracks = await lib.GetRecentTracks(Settings.Default.LastFMUser, 1, 10);
 
             Assert.IsNotNull(tracks);
-            Assert.AreEqual(10, tracks.Count());
+            var revTracks = tracks as IRevTrack[] ?? tracks.ToArray();
+            Assert.AreEqual(10, revTracks.Length);
 
-            foreach (var item in tracks)
+            foreach (var item in revTracks)
             {
                 Assert.That(item.PlayDate.HasValue);
                 Assert.That(item.PlayDate.Value < DateTime.UtcNow);

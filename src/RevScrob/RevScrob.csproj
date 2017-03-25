@@ -45,10 +45,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BatchProcessor.cs" />
+    <Compile Include="ILastFM.cs" />
+    <Compile Include="IRevTrack.cs" />
+    <Compile Include="ITrackRecord.cs" />
     <Compile Include="iTunesLibrary.cs" />
     <Compile Include="LastFMLibrary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="RestCaller.cs" />
+    <Compile Include="RTrack.cs" />
     <Compile Include="TrackRecord.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -63,7 +72,12 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
