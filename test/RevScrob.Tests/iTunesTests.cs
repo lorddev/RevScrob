@@ -22,8 +22,8 @@ namespace RSTest
         {
             using (var app = new iTunesLibrary())
             {
-                var lib = app.GetLibrary();
-                foreach (var track in app.GetLibrary())
+                var lib = app.GetLibraryAsDictionary();
+                foreach (var track in lib.Values)
                 //for (int i = 1; i < lib.Count(); i++)
                 {
                     //IITTrack track = lib[i];

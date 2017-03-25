@@ -1,32 +1,16 @@
-﻿using System;
+﻿#pragma warning disable S101 // Types should be named in camel case
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using Microsoft.CSharp.RuntimeBinder;
 using Newtonsoft.Json.Linq;
 
 namespace RevScrob
 {
-    public interface ILastFM
-    {
-        IRevTrack GetTrack(string artist, string song);
-
-        IEnumerable<IRevTrack> GetRecentTracks(string username, int i = 1);
-    }
-
-    public interface IRevTrack
-    {
-        int? PlayCount { get; set; }
-        DateTime? PlayDate { get; set; }
-        string Song { get; set; }
-        string Album { get; set; }
-        string Artist { get; set; }
-        string MBId { get; set; }
-    }
-
-    public class LastFMLibrary : ILastFM
+    public partial class LastFMLibrary : ILastFM
     {
         public IRevTrack GetTrack(string artist, string song)
         {
@@ -53,18 +37,7 @@ namespace RevScrob
                 };
         }
 
-        public struct RTrack : IRevTrack
-        {
-            public int? PlayCount { get; set; }
-
-            public DateTime? PlayDate { get; set; }
-            public string Song { get; set; }
-            public string Album { get; set; }
-            public string Artist { get; set; }
-            public string MBId { get; set; }
-        }
-
-        public IEnumerable<IRevTrack> GetRecentTracks(string username, int page = 1)
+        public IEnumerable<IRevTrack> GetRecentTracks(string username, int page = 1, int pageSize = 50)
         {
             var caller = new RestCaller
                 {
@@ -77,6 +50,7 @@ namespace RevScrob
                   .AddParam("user", username)
                   .AddParam("api_key", "e2e16b5513251519bdce400fcd094332")
                   .AddParam("page", page.ToString())
+                  .AddParam("limit", pageSize.ToString())
                   .AddParam("format", "json"); 
             
             dynamic result = caller.ExecuteAsync().Result;
@@ -84,9 +58,14 @@ namespace RevScrob
 
             var list = new List<IRevTrack>();
 
-            DateTime Epoch = new DateTime(1970, 1, 1);
+            DateTime epoch = new DateTime(1970, 1, 1);
 
-            IEnumerable<JToken> tracks = result.Data.recenttracks.track;
+            IEnumerable<JToken> tracks = result.Data != null ? result.Data.recenttracks.track : null;
+
+            if (tracks == null)
+            {
+                return list;
+            }
 
             foreach (dynamic item in tracks)
             {
@@ -94,14 +73,14 @@ namespace RevScrob
                 var uts = double.Parse(utsString);
                 if (uts > 0)
                 {
-                    list.Add(new RTrack 
-                        {
-                            Album = item.album["#text"],
-                            Artist = item.artist["#text"],
-                            Song = item.name,
-                            PlayDate = Epoch.AddSeconds(uts).ToLocalTime(),
-                            MBId = item.mbid
-                        });
+                    list.Add(new RTrack
+                    {
+                        Album = item.album["#text"],
+                        Artist = item.artist["#text"],
+                        Song = item.name,
+                        PlayDate = epoch.AddSeconds(uts).ToLocalTime(),
+                        MBId = item.mbid
+                    });
                 }
             }
 
@@ -126,13 +105,31 @@ namespace RevScrob
             caller.AddParam("track", HttpUtility.UrlEncode(song));
 
             dynamic result = await caller.ExecuteAsync();
-        
-            return new RTrack
-                {
-                    Album = result.Data.track.album["#text"],
-                    PlayCount = result.Data.track.userplaycount,
-                    MBId = result.Data.track.mbid
-                };
+
+            if (result.Error != null && result.Error.message == "Track not found")
+            {
+                return null;
+            }
+
+            var track = new RTrack();
+            //try
+            {
+                var data = result.Data;
+                track.PlayCount = data.track.userplaycount;
+                track.MBId = data.track.mbid;
+                track.Album = data.album?.title;
+
+                return track;
+            }
+           // catch (RuntimeBinderException)
+            {
+                //if (!Debugger.IsAttached)
+                //{
+                //    Debugger.Launch();
+                //}
+
+                //throw;
+            }
         }
 
         public async Task<IRevTrack> GetTrackAsync(string mbid)
@@ -155,7 +152,7 @@ namespace RevScrob
 
             return new RTrack
             {
-                Album = result.Data.track.album["#text"],
+                Album = result.Data.track.album?.title,
                 PlayCount = result.Data.track.userplaycount,
                 MBId = result.Data.track.mbid
             };

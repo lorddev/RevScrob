@@ -43,21 +43,22 @@ namespace RSTest
             var mock2 = new Mock<IRevTrack>();
             var mock3 = new Mock<IRevTrack>();
 
-            mock.Setup(m => m.GetRecentTracks("alord1647fm", 0)).Returns(new List<IRevTrack> {mock2.Object, mock3.Object});
+            mock.Setup(m => m.GetRecentTracks("alord1647fm", 0, 10)).Returns(new List<IRevTrack> {mock2.Object, mock3.Object});
             var lib = mock.Object;
-            Assert.That(lib.GetRecentTracks("alord1647fm", 0).Count() == 2);
+            Assert.That(lib.GetRecentTracks("alord1647fm", 0, 10).Count() == 2);
         }
 
         [Test]
         public void CanLoadLastFMMultiple()
         {
             var lib = new LastFMLibrary();
-            var tracks = lib.GetRecentTracks("alord1647fm");
+            var tracks = lib.GetRecentTracks("alord1647fm", 1, 10);
 
             Assert.IsNotNull(tracks);
-            Assert.AreEqual(10, tracks.Count());
+            var revTracks = tracks as IRevTrack[] ?? tracks.ToArray();
+            Assert.AreEqual(10, revTracks.Length);
 
-            foreach (var item in tracks)
+            foreach (var item in revTracks)
             {
                 Assert.That(item.PlayDate.HasValue);
                 Assert.That(item.PlayDate.Value < DateTime.UtcNow);

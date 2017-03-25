@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RevScrob", "RevScrob\RevScrob.csproj", "{FDAB4FA0-E7AE-4959-9764-FB32868990D3}"
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.4
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RevScrob", "src\RevScrob\RevScrob.csproj", "{FDAB4FA0-E7AE-4959-9764-FB32868990D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RSTest", "RSTest\RSTest.csproj", "{35E99D10-FCD2-402B-8906-8BA188809E50}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RevScrob.Tests", "test\RevScrob.Tests\RevScrob.Tests.csproj", "{35E99D10-FCD2-402B-8906-8BA188809E50}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
