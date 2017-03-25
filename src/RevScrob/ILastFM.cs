@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace RevScrob
 {
@@ -6,6 +7,6 @@ namespace RevScrob
     {
         IRevTrack GetTrack(string artist, string song);
 
-        IEnumerable<IRevTrack> GetRecentTracks(string username, int page = 1, int pageSize = 50);
+        Task<IEnumerable<IRevTrack>> GetRecentTracks(string username, int page = 1, int pageSize = 50);
     }
 }

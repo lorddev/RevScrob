@@ -9,7 +9,7 @@ namespace RSTest
     public class BatchProcessorTests
     {
         [Test]
-        public async Task GoTest()
+        public async Task RecentTracksTest()
         {
             var batch = new BatchProcessor();
             int i = await Task.Run(() =>  batch.ProcessRecentTracks());

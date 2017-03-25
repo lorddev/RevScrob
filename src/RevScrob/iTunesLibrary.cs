@@ -27,8 +27,8 @@ namespace RevScrob
      * Plans for 1.1: Enable dynamic creation of playlist similar to "Most Played Albums last 3 months" list on Spotify.
      */
     // ReSharper disable InconsistentNaming
+
     public class iTunesLibrary : IDisposable
-    // ReSharper restore InconsistentNaming
     {
         readonly iTunesApp _itunes = new iTunesAppClass();
 
@@ -96,12 +96,7 @@ namespace RevScrob
                     Console.WriteLine("Delete duplicate? " + track.Name);
                 }
             }
-
-            for (int debugi = 0; debugi < 10; debugi++)
-            {
-                Console.WriteLine(itunes.ElementAt(debugi).Key);
-            }
-
+            
             return itunes;
         }
 
@@ -119,6 +114,8 @@ namespace RevScrob
             album = album.Split('(')[0];
             song = song.Replace("(", "").Replace(")", "");
             if (!song.ToLower().Contains("mix") && !song.Contains("Reprise")
+                && !song.ToLower().Contains("instrumental")
+                && !song.ToLower().Contains("feat")
                 && !song.ToLower().Contains("version")
                 && !song.Contains(":")
                 && !song.ToLower().Contains("variatio")
@@ -144,7 +141,7 @@ namespace RevScrob
             if (!disposing) return;
             try
             {
-               // _itunes.Quit();
+               _itunes.Quit();
             }
             catch
             {

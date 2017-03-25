@@ -68,37 +68,30 @@ namespace RevScrob
                 var content = task.Result;
 
                 // Assume we know how to deserialize the object.
-                dynamic error = null;
-                dynamic dataItem = null;// = new T[0];
 
-                if (content.Contains("error"))
+                dynamic dataItem;// = new T[0];
+                
+                // try as array
+                try
                 {
-                    error = JObject.Parse(content);
+                    dataItem = JsonConvert.DeserializeObject<T[]>(content);
                 }
-                else
+                catch
                 {
-                    // try as array
-                    try
-                    {
-                        dataItem = JsonConvert.DeserializeObject<T[]>(content);
-                    }
-                    catch
-                    {
-                        dataItem =
-                            new[]
-                                {
-                                    JsonConvert.DeserializeObject(content) as T
-                                };
-                    }
+                    dataItem =
+                        new[]
+                            {
+                                JsonConvert.DeserializeObject(content) as T
+                            };
+                }
 
-                    dataItem = JObject.Parse(content);
-                }
+                dataItem = JObject.Parse(content);
+
 
                 return new ApiResult
                     {
                         StatusCode = response.StatusCode,
-                        Data = dataItem,
-                        Error = error
+                        Data = dataItem
                     };
 
                 throw new Exception("Unable to deserialize");
@@ -121,7 +114,7 @@ namespace RevScrob
             HttpResponseMessage response;
             var endpoint = BuildEndpoint() + BuildQueryString();
 
-            Debug.WriteLine(endpoint);
+            Debug.WriteLine(Host + endpoint);
             var handler = new HttpClientHandler { CookieContainer = _cookies };
          
             using (var httpClient = new HttpClient(handler))
