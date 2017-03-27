@@ -18,7 +18,7 @@ namespace RSTest
             Assert.Inconclusive();
         }
 
-        [Test, Explicit, Ignore]
+        [Test, Explicit, Ignore("You need to run this one manually.")]
         public async Task ProcessLibrary()
         {
             var batch = new BatchProcessor();

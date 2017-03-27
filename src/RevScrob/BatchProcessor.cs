@@ -51,7 +51,7 @@ namespace RevScrob
                                 var orig = Console.ForegroundColor;
                                 Console.ForegroundColor = ConsoleColor.Cyan;
                                 Console.WriteLine(
-                                    $"Need to buy? {t2.Album} {t2.Song} by {t2.Artist}");
+                                    $"Need to buy? {t2.Album}: {t2.Song} by {t2.Artist}");
                                 Console.ForegroundColor = orig;
                                 continue;
                             }
