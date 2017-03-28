@@ -27,3 +27,9 @@ for subsequent passes.
   and uncheck the duplicates before submitting. Otherwise, syncing the duplicates will result in a feedback loop where
   the song is scrobbled every time you sync. If you accidentally scrobble the song, you can log in to Last.fm, find the
   song to fix, and delete the duplicate records.
+  
+  The workaround is to sync your iPod first, eject your iPod, and wait for the dialog:
+  
+  ![Device Sync](https://raw.githubusercontent.com/lorddev/RevScrob/develop/ScreenClip.png)
+  
+  Then run RevScrob. Then sync your iPod _again_ before using it, and eject it. When the dialog comes up this time, uncheck all the songs.
